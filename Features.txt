@@ -1,0 +1,43 @@
+Live Now:
+
+2 players (Identified by the color of the pendant their cahracters wear)
+
+Wands:
+can grab wand and wand tracks player
+wand scales based on how far back the player is
+each player gets their own wand size, width, grip size, and color
+wand tracks angle you hold it at
+
+Bars:
+each player gets a health bar and a power bar
+
+Left Hand:
+swiping up brings up a tutorial (still in development)
+swiping down 
+swiping right increases your power
+
+Spellcasting circles:
+each person has 4 circles 
+the circles follow the players around (based on head and hips location)
+the circles scale both in position and radii based on distance away
+
+Spellcasting:
+can trace amongst the circles
+can clear by casting too long of a spell
+can clear spell by putting left hand in start spell circle
+can clear spell by putting wand tip in start spell circle
+
+Spells
+See spellbook.txt
+
+Looking Ahead:
+Splash screens (Start, spellbook, and game over)
+tracing too long of a spell backfires on you
+
+To be tried:
+
+What can I scale?
+each player has their own color (circles, wand, tutorial)
+has a damage modifier, for example if you cast an unforgivable curse and are cursed
+variables for damage of each spell
+

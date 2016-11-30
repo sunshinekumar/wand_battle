@@ -1,0 +1,13 @@
+Expelliarmus will make the wand reset back to the original spot and reset the opponent's spell trace
+	Uses 20 power
+	south, north	
+
+Stupefy takes off 30 health
+        Uses 30 power
+	north, south
+
+Protego protects against next spell cast, but stops caster from casting another spell
+        Uses 50 power
+	west, north, east
+
+Swiping right with the left hand to restore power

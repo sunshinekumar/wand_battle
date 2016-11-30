@@ -1,0 +1,4 @@
+I added the kinect workshop as time worked on the project, as it directly furthered the term project.
+I added to the timesheet.txt
+There is now a spellbook with the spells to be used, along with how to cast each
+There is as well a features list, indicating what you can do and what I plan/hope to add
