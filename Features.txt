@@ -30,14 +30,23 @@ can clear spell by putting wand tip in start spell circle
 Spells
 See spellbook.txt
 
+Gameplay:
+The color of the victor covers the screen when they win
+	The other player gets to zero health
+
+
+
+
 Looking Ahead:
 Splash screens (Start, spellbook, and game over)
 tracing too long of a spell backfires on you
 
 To be tried:
+try to get rid of spell residual
 
 What can I scale?
 each player has their own color (circles, wand, tutorial)
 has a damage modifier, for example if you cast an unforgivable curse and are cursed
 variables for damage of each spell
+almost everything is variable, so it makes it easy to affect things with spells
 
