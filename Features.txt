@@ -32,7 +32,9 @@ See spellbook.txt
 
 Gameplay:
 The color of the victor covers the screen when they win
-	The other player gets to zero health
+	Occurs when the other player gets to zero health
+Start screen, where each player gets a circle over their left shoulder
+	To start, touch the circle with your wand
 
 
 

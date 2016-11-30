@@ -50,7 +50,7 @@ class GameRuntime(object):
         self.wand_wide = 90    #For drawing the wand
         self.wand_high = 90
 
-        self.wand_pos = (self.screen_width//4, self.screen_height*3/5)   #Will be set to right hand pos if right hand closes on it
+        self.wand_pos = (self.screen_width//2, self.screen_height*3/5)   #Will be set to right hand pos if right hand closes on it
         self.wand_tip = (self.wand_pos[0] + self.wand_wide, self.wand_pos[1] + self.wand_high)
         self.default_wand_pos = self.wand_pos
         self.default_wand_tip = self.wand_tip
@@ -72,11 +72,15 @@ class GameRuntime(object):
         self.grip_width_proportion2 = 1.3
 
         
-        self.health_color = (0,0,255)
-        self.power_color = (255,255,255)
+        self.health_color = (0,190, 0)
+        self.health_color_full = (0,255,0)
+        self.health_color_warning = (180, 0, 0)
+        self.warning_percent = .2
+        self.power_color = (50,50,50)
+        self.power_color_full = (0,0,0)
         self.bar_height = 30
         self.bar_dist_from_head = 60
-        self.player_label_distance = 60
+        self.player_label_distance = 100
         self.player_label_radius = 20
 
         self.body_list = [-1,-1]
@@ -127,8 +131,8 @@ class GameRuntime(object):
         self.protego_power = 50
 
         self.spell_book = dict()        
-        self.spell_book = {(self.south, self.north): self.expelliarmus , 
-                           (self.north, self.south): self.stupefy, 
+        self.spell_book = {(self.south, self.north): self.expelliarmus, 
+                           (self.east, self.west): self.stupefy, 
                            (self.west, self.north, self.east): self.protego}
         """
         E will make the wand reset back to the original spot and reset the opponent's spell trace
@@ -151,6 +155,7 @@ class GameRuntime(object):
         self.damage_modifier2 = 1
 
         self.winner = -1
+        self.start_screen = 1
 
         #Because the wand is still in the circle after casting the spell
         # and we don't want this to roll over to the next trace
@@ -159,9 +164,10 @@ class GameRuntime(object):
         self.spell_clear2 = 0
  
         # Used to manage how fast the screen updates 
-        self._clock = pygame.time.Clock() 
+        self._clock = pygame.time.Clock()
  
         # Set the width and height of the window [width/2, height/2] 
+        # Change this to make it fullscreen or not
         self._screen = pygame.display.set_mode((960,540), pygame.HWSURFACE|pygame.DOUBLEBUF, 32) 
  
         # Loop until the user clicks the close button. 
@@ -221,7 +227,9 @@ class GameRuntime(object):
         east =  (north[0] + self.circle_separation_radius, north[1] + self.circle_separation_radius)
         west = (east[0] - self.circle_separation_radius * 2, east[1])
         clear = (north[0] - self.circle_separation_radius, north[1])
-        self.circles = [north, south, east, west, clear] 
+        if not self.start_screen:
+            self.circles = [north, south, east, west, clear] 
+        else: self.circles = [clear]
         self.circle_radius = abs(int(joint_points[PyKinectV2.JointType_Head].y - joint_points[PyKinectV2.JointType_SpineShoulder].y))//2
         for center in self.circles:
             pygame.draw.circle(self._frame_surface, self.spell_circle_color, (int(center[0]), int(center[1])) , self.circle_radius, 10) 
@@ -234,7 +242,9 @@ class GameRuntime(object):
         east =  (north[0] + self.circle_separation_radius2, north[1] + self.circle_separation_radius2)
         west = (east[0] - self.circle_separation_radius2 * 2, east[1])
         clear = (north[0] - self.circle_separation_radius2, north[1])
-        self.circles2 = [north, south, east, west, clear] 
+        if not self.start_screen:
+            self.circles2 = [north, south, east, west, clear] 
+        else: self.circles2 = [clear]
         self.circle_radius2 = abs(int(joint_points[PyKinectV2.JointType_Head].y - joint_points[PyKinectV2.JointType_SpineShoulder].y))//2
         for center in self.circles2:
             pygame.draw.circle(self._frame_surface, self.spell_circle_color2, (int(center[0]), int(center[1])) , self.circle_radius2, 10) 
@@ -244,8 +254,17 @@ class GameRuntime(object):
         health_rect = (int(head[0] - self.health//2), int(head[1] - self.bar_dist_from_head - self.bar_height), self.health, self.bar_height)
         power_rect =  (int(head[0] - self.power//2), int(head[1] - self.bar_dist_from_head - self.bar_height*2), self.power, self.bar_height)
 
-        pygame.draw.rect(self._frame_surface, self.health_color, (health_rect)) # Health bar
-        pygame.draw.rect(self._frame_surface, self.power_color, (power_rect)) # Power bar
+        if self.health == self.max_health:
+            pygame.draw.rect(self._frame_surface, self.health_color_full, (health_rect)) # Health bar
+        elif self.health <= self.max_health * self.warning_percent:
+            pygame.draw.rect(self._frame_surface, self.health_color_warning, (health_rect)) # Health bar
+        else:
+            pygame.draw.rect(self._frame_surface, self.health_color_full, (health_rect)) # Health bar
+        if self.power == self.max_power:
+            pygame.draw.rect(self._frame_surface, self.power_color_full, (power_rect)) # Power bar full
+        else:
+            pygame.draw.rect(self._frame_surface, self.power_color, (power_rect)) # Power bar 
+
         pygame.draw.circle(self._frame_surface, self.wand_color, (head[0], head[1] + self.player_label_distance), self.player_label_radius)
 
     def draw_health_power2(self, joint_points):
@@ -253,15 +272,23 @@ class GameRuntime(object):
         health_rect2 = (int(head[0] - self.health2//2), int(head[1] - self.bar_dist_from_head - self.bar_height), self.health2, self.bar_height)
         power_rect2 =  (int(head[0] - self.power2//2), int(head[1] - self.bar_dist_from_head - self.bar_height*2), self.power2, self.bar_height)
 
-        pygame.draw.rect(self._frame_surface, self.health_color, (health_rect2)) # Health bar
-        pygame.draw.rect(self._frame_surface, self.power_color, (power_rect2)) # Power bar
+        if self.health2 == self.max_health2:
+            pygame.draw.rect(self._frame_surface, self.health_color_full, (health_rect2)) # Health bar
+        elif self.health2 <= self.max_health2 * self.warning_percent:
+            pygame.draw.rect(self._frame_surface, self.health_color_warning, (health_rect2)) # Health bar
+        else:
+            pygame.draw.rect(self._frame_surface, self.health_color_full, (health_rect2)) # Health bar
+        if self.power2 == self.max_power2:
+            pygame.draw.rect(self._frame_surface, self.power_color_full, (power_rect2)) # Power bar full
+        else:
+            pygame.draw.rect(self._frame_surface, self.power_color, (power_rect2)) # Power bar 
         pygame.draw.circle(self._frame_surface, self.wand_color2, (head[0], head[1] + self.player_label_distance), self.player_label_radius)
 
     def draw_winner(self):
         if self.winner == 1:
             pygame.draw.rect(self._frame_surface, self.wand_color, (0,0,self.screen_width, self.screen_height))
         if self.winner == 2:
-            pygame.draw.rect(self._frame_surface, self.wand_color2, (0,0,screen_width, screen_height))
+            pygame.draw.rect(self._frame_surface, self.wand_color2, (0,0,self.screen_width, self.screen_height))
 
 
     def tip_is_in(self, center, radius, tip):
@@ -338,6 +365,7 @@ class GameRuntime(object):
                                 self.cur_left_hand_width = joints[PyKinectV2.JointType_HandLeft].Position.x
                                 left = (joint_points[PyKinectV2.JointType_HandLeft].x, joint_points[PyKinectV2.JointType_HandLeft].y)
                                 if self.circles == []: self.spell_clear = 0
+                                elif self.start_screen == 1: pass   #To stop the index out of bounds in the next line
                                 elif(self.tip_is_in(self.circles[self.clear], self.circle_radius, left)):
                                     self.spell_clear = 1
 
@@ -406,6 +434,7 @@ class GameRuntime(object):
                                 self.cur_left_hand_width2 = joints[PyKinectV2.JointType_HandLeft].Position.x
                                 left = (joint_points[PyKinectV2.JointType_HandLeft].x, joint_points[PyKinectV2.JointType_HandLeft].y)
                                 if self.circles2 == []: self.spell_clear2 = 0
+                                elif self.start_screen == 1: pass   #To stop the index out of bounds in the next line
                                 elif(self.tip_is_in(self.circles2[self.clear], self.circle_radius2, left)):
                                     self.spell_clear2 = 1
                                 
@@ -445,6 +474,8 @@ class GameRuntime(object):
             #Reasons to clear a trace
             if(len(self.trace) > self.max_spell_length):
                 self.trace = []
+                print("Spell Backfired on Player 1!")
+                self.health -= 10
 
             if self.spell != "":
                 #self.spell_residue = 1
@@ -462,11 +493,14 @@ class GameRuntime(object):
                 # 4. We code in a circle for the left hand to touch to clear the current spell/ to start a new spell. 
                 #print(self.tip_is_in(center, radius, tip))
                 if (self.tip_is_in(center, radius, tip) and (self.trace == [] or self.trace[-1] != centerIndex and not self.spell_clear)):
+                    if(self.start_screen == 1):
+                        self.start_screen = 0
+                        break
                     #print(self.spell_residue)
                     self.trace.append(centerIndex)
                     if centerIndex == self.clear: 
                         self.trace = []
-                    print("trace", self.trace)
+                    if self.trace != []: print("trace", self.trace)
                 if(self.spell_clear): 
                     self.trace = []
                     self.spell_clear = 0
@@ -518,6 +552,8 @@ class GameRuntime(object):
             #Reasons to clear a trace
             if(len(self.trace2) > self.max_spell_length2):
                 self.trace2 = []
+                print("Spell Backfired on Player 2!")
+                self.health2 -= 10
 
             if self.spell2 != "":
                 #self.spell_residue = 1
@@ -535,11 +571,14 @@ class GameRuntime(object):
                 # 4. We code in a circle for the left hand to touch to clear the current spell/ to start a new spell. 
                 #print(self.tip_is_in(center, radius, tip))
                 if (self.tip_is_in(center, radius, tip) and (self.trace2 == [] or self.trace2[-1] != centerIndex and not self.spell_clear2)):
+                    if(self.start_screen == 1):
+                        self.start_screen = 0
+                        break
                     #print(self.spell_residue)
                     self.trace2.append(centerIndex)
                     if centerIndex == self.clear: 
                         self.trace2 = []
-                    print("trace2", self.trace2)
+                    if self.trace2 != []: print("trace2", self.trace2)
                 if(self.spell_clear2): 
                     self.trace2 = []
                     self.spell_clear2 = 0
