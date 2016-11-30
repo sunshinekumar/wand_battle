@@ -10,4 +10,4 @@ Protego protects against next spell cast, but stops caster from casting another 
         Uses 50 power
 	west, north, east
 
-Swiping right with the left hand to restore power
+Swiping right with the left hand to restore power 
