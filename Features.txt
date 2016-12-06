@@ -12,9 +12,10 @@ Bars:
 each player gets a health bar and a power bar
 
 Left Hand:
-swiping up brings up a tutorial (still in development)
-swiping down 
+swiping up brings up a tutorial
+swiping down closes tutorial
 swiping right increases your power
+Hold hand in the initiate circle to start a spell and lower your shield
 
 Spellcasting circles:
 each person has 4 circles 
@@ -26,25 +27,47 @@ can trace amongst the circles
 can clear by casting too long of a spell
 can clear spell by putting left hand in start spell circle
 can clear spell by putting wand tip in start spell circle
+cannot cast a spell while shields are up
+	When shields are up, actual shield raised for protection
+
+Sounds:
+Start screen has background music
+Message to the duelers by professor Mcgonogall once you start
+win screen has a voice declaring the winner
+each spell gets shouted when it is cast, followed by the sound of a spell flying
+when a spell is blocked, you hear it blocked
+when there is insufficient power, you get another sound effect
+
+
+Gameplay:
+Black screen with message in victor's color appears when one wins
+	random message of several victory messages each time
+Start screen, where each player gets a circle over their left shoulder
+	To start, touch the circle with your wand
+quits on "escape"
+Power bar darkens when full
+Health bar turns red when you are low on health
+From anywhere, put hands together for a second to pause/return to start screen
+	putting hands together (bowing) once someone wins restarts the game
+one player practice mode
+
 
 Spells
 See spellbook.txt
 
-Gameplay:
-The color of the victor covers the screen when they win
-	Occurs when the other player gets to zero health
-Start screen, where each player gets a circle over their left shoulder
-	To start, touch the circle with your wand
-
-
 
 
 Looking Ahead:
-Splash screens (Start, spellbook, and game over)
-tracing too long of a spell backfires on you
+Screen of how to play (circle select)
+	clap hands to return
+create my wand screen (circle select)
+	position (left/right of wand determines color)
+Avada kedavra
+
 
 To be tried:
 try to get rid of spell residual
+select character you wish to be
 
 What can I scale?
 each player has their own color (circles, wand, tutorial)
