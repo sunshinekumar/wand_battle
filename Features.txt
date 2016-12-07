@@ -57,21 +57,22 @@ See spellbook.txt
 
 
 
-Looking Ahead:
-Screen of how to play (circle select)
-	clap hands to return
-create my wand screen (circle select)
-	position (left/right of wand determines color)
-Avada kedavra
 
 
+What can I scale/build on?
+
+almost everything is variable, so it makes it easy to affect things with spells
 To be tried:
-try to get rid of spell residual
+try to get rid of spell residual (clear = initiate, first in trace)
 select character you wish to be
 
-What can I scale?
-each player has their own color (circles, wand, tutorial)
-has a damage modifier, for example if you cast an unforgivable curse and are cursed
-variables for damage of each spell
-almost everything is variable, so it makes it easy to affect things with spells
+Information collected:
+contributors: (Allison Black), Julie Lee (jiwonlee), Hadley Killen (hkillen), Eugene Luo (eyluo)
+have snape saying "First, we bow" to start it off. (done)
+use N E S W instead and outline letters (done)
+edit tutorial screen 
 
+
+crashes on 'start' with two players...
+does not cast expelliarmus
+bug with mini tutorials
